@@ -25,7 +25,7 @@ import {
 import Placeholder from "@/app/components/base/placeholder";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { itemsQueryOptions } from "@/app/lib/queries";
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "db/types";
 
 enum SortOptions {
   CreatedAt = "Created At",

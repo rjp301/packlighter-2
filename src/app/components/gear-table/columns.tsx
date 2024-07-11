@@ -16,7 +16,7 @@ import { toast } from "sonner";
 // import ItemImage from "@/app/components/item-image";
 // import { cn } from "@/app/lib/utils";
 import { formatWeight } from "@/app/lib/utils";
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "db/types";
 
 export const columns: ColumnDef<ItemSelect>[] = [
   {

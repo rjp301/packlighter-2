@@ -5,17 +5,17 @@ import { zValidator } from "@hono/zod-validator";
 import {
   Category,
   CategoryItem,
-  Item,
   List,
   db,
   eq,
+  and,
   inArray,
   max,
 } from "astro:db";
-import type { ExpandedCategory, ExpandedList } from "../lib/types";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
 import { categoryRoutes } from "./categories";
+import { zListCategories } from "db/schema";
 
 const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
 const listIdValidator = zValidator(
@@ -77,36 +77,13 @@ const list = new Hono()
     const list = await db
       .select()
       .from(List)
-      .where(eq(List.id, listId))
+      .where(and(eq(List.id, listId), eq(List.userId, userId)))
       .then((rows) => rows[0]);
 
-    const categories = await db
-      .select()
-      .from(Category)
-      .where(eq(Category.listId, listId))
-      .orderBy(Category.sortOrder);
+    const parsedCategories = zListCategories.safeParse(list.categories);
+    list.categories = parsedCategories.success ? parsedCategories.data : [];
 
-    const categoryItems = await db
-      .select()
-      .from(CategoryItem)
-      .leftJoin(Item, eq(CategoryItem.itemId, Item.id))
-      .where(eq(Item.userId, userId))
-      .orderBy(CategoryItem.sortOrder);
-
-    const expandedCategories: ExpandedCategory[] = categories.map(
-      (category) => {
-        const items = categoryItems
-          .filter((ci) => ci.CategoryItem.categoryId === category.id)
-          .filter((ci) => ci.Item !== null)
-          .map((ci) => ({ ...ci.CategoryItem, itemData: ci.Item! }));
-        const weight = items.reduce((acc, ci) => acc + ci.itemData.weight, 0);
-        const packed = items.every((ci) => ci.packed);
-        return { ...category, items, weight, packed };
-      },
-    );
-
-    const result: ExpandedList = { ...list, categories: expandedCategories };
-    return c.json(result);
+    return c.json(list);
   })
   .patch(
     "/",

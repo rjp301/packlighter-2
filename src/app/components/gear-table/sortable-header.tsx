@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/app/components/ui/button";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { type Column } from "@tanstack/react-table";
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "db/types";
 
 type Props = React.PropsWithChildren<{
   column: Column<ItemSelect, unknown>;

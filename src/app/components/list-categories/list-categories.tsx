@@ -1,4 +1,4 @@
-import type { ExpandedCategory } from "@/api/lib/types";
+import type { ExpandedCategory } from "db/types";
 import React from "react";
 import {
   DragDropContext,

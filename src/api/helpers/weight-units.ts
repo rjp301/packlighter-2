@@ -1,4 +1,4 @@
-import type { ExpandedCategory } from "../lib/types";
+import type { ExpandedCategory } from "../../../db/types";
 
 const weightUnitOptions = ["g", "kg", "oz", "lb"] as const;
 export type WeightUnit = (typeof weightUnitOptions)[number];

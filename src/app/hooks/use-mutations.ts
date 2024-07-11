@@ -12,7 +12,7 @@ import {
 } from "../lib/queries";
 import { toast } from "sonner";
 import type { CategoryItem, Item, List } from "astro:db";
-import type { ExpandedCategory, ExpandedCategoryItem } from "@/api/lib/types";
+import type { ExpandedCategory, ExpandedCategoryItem } from "db/types";
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 

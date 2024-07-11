@@ -27,7 +27,7 @@ import { useSidebarStore } from "@/app/components/sidebar/sidebar-store";
 import { Link } from "@tanstack/react-router";
 import useMutations from "@/app/hooks/use-mutations";
 import type { DraggableProvided } from "@hello-pangea/dnd";
-import type { ListSelect } from "@/api/lib/types";
+import type { ListSelect } from "db/types";
 import useListId from "@/app/hooks/use-list-id";
 
 interface Props {

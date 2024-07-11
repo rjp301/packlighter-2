@@ -1,6 +1,6 @@
 import React from "react";
 import { Drawer, DrawerContent } from "../ui/drawer";
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "db/types";
 import ItemForm from "./item-form";
 
 type Props = {

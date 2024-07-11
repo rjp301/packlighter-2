@@ -11,7 +11,7 @@ import {
 import { Button } from "./ui/button";
 import { Trash } from "lucide-react";
 import { cn } from "@/app/lib/utils";
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "db/types";
 import useMutations from "../hooks/use-mutations";
 import ServerInput from "./input/server-input";
 

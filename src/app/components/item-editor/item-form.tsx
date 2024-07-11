@@ -1,4 +1,4 @@
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "db/types";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

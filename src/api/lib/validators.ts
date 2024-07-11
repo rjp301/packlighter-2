@@ -1,6 +1,6 @@
 import { and, db, eq } from "astro:db";
 import { z } from "zod";
-import type { AllTables } from "./types";
+import type { AllTables } from "../../../db/types";
 
 export const validIdSchema = (table: AllTables) =>
   z.string().refine(async (value) => {
