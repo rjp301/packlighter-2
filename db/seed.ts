@@ -1,5 +1,5 @@
 import { generateId } from "@/api/helpers/generate-id";
-import { Category, CategoryItem, Item, List, User, db } from "astro:db";
+import { Item, List, User, db } from "astro:db";
 import {
   randomItemFromArray,
   randomLengthArray,

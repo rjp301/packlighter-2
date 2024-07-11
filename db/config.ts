@@ -56,36 +56,7 @@ const List = defineTable({
   },
 });
 
-const Category = defineTable({
-  columns: {
-    id: column.text({ primaryKey: true }),
-    userId: column.text({ references: () => User.columns.id }),
-    listId: column.text({ references: () => List.columns.id }),
-    createdAt: column.text({ default: NOW }),
-
-    name: column.text({ default: "" }),
-    sortOrder: column.number({ default: 0 }),
-  },
-});
-
-const CategoryItem = defineTable({
-  columns: {
-    id: column.text({ primaryKey: true }),
-    userId: column.text({ references: () => User.columns.id }),
-    categoryId: column.text({ references: () => Category.columns.id }),
-    itemId: column.text({ references: () => Item.columns.id }),
-    createdAt: column.text({ default: NOW }),
-
-    sortOrder: column.number({ default: 0 }),
-    quantity: column.number({ default: 1 }),
-
-    packed: column.boolean({ default: false }),
-    wornWeight: column.boolean({ default: false }),
-    consWeight: column.boolean({ default: false }),
-  },
-});
-
 // https://astro.build/db/config
 export default defineDb({
-  tables: { User, UserSession, Item, List, Category, CategoryItem },
+  tables: { User, UserSession, Item, List },
 });
