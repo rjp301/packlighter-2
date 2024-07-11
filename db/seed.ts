@@ -6,6 +6,7 @@ import { itemNamesDescs } from "./seeds/item-names-descs";
 import { weightUnits } from "@/api/helpers/weight-units";
 import { listNamesDescs } from "./seeds/list-names-descs";
 import { imageLinks } from "./seeds/image-links";
+import { initCategory, initCategoryItem } from "./init";
 
 // https://astro.build/db/seed
 export default async function seed() {
@@ -20,19 +21,6 @@ export default async function seed() {
     })
     .returning()
     .then((rows) => rows[0]);
-
-  const lists = await db
-    .insert(List)
-    .values(
-      listNamesDescs.map(({ name, description }) => ({
-        id: generateId(),
-        userId,
-        name,
-        description,
-      })),
-    )
-    .returning();
-  console.log(`✅ Seeded ${lists.length} lists`);
 
   const items = await db
     .insert(Item)
@@ -49,6 +37,33 @@ export default async function seed() {
     )
     .returning();
   console.log(`✅ Seeded ${items.length} items`);
+
+  const lists = await db
+    .insert(List)
+    .values(
+      listNamesDescs.map(({ name, description }) => ({
+        id: generateId(),
+        userId,
+        name,
+        description,
+        categories: new Array(randomNumberWithinRange(2, 7)).fill(0).map(() => {
+          const categoryItems = new Array(randomNumberWithinRange(2, 7))
+            .fill(0)
+            .map(() =>
+              initCategoryItem({
+                itemId: randomItemFromArray(items).id,
+                quantity: randomNumberWithinRange(1, 10),
+              }),
+            );
+          return initCategory({
+            name: randomItemFromArray(categoryNames),
+            items: categoryItems,
+          });
+        }),
+      })),
+    )
+    .returning();
+  console.log(`✅ Seeded ${lists.length} lists`);
 
   const categories = await db
     .insert(Category)

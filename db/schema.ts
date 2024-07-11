@@ -9,12 +9,15 @@ export const zCategoryItem = z.object({
   createdAt: z.string().default(new Date().toISOString()),
 });
 
+export type CategoryItem = z.infer<typeof zCategoryItem>;
+
 export const zCategory = z.object({
   id: z.string().default(uuid()),
   name: z.string().default(""),
-  description: z.string().default(""),
   createdAt: z.string().default(new Date().toISOString()),
   items: z.array(zCategoryItem).default([]),
 });
+
+export type Category = z.infer<typeof zCategory>;
 
 export const zListCategories = z.array(zCategory).catch([]);

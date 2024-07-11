@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AppHeader from "@/app/components/app-header";
-import Error from "@/app/components/base/error";
+import ErrorPage from "@/app/components/base/error";
 import Loader from "@/app/components/base/loader";
 import ServerInput from "@/app/components/input/server-input";
 import ListSettings from "@/app/components/list-settings";
@@ -14,6 +14,7 @@ import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "../lib/queries";
 import useMutations from "../hooks/use-mutations";
 import ListCategories from "../components/list-categories/list-categories";
+import { api } from "../lib/client";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
@@ -33,7 +34,7 @@ function ListPage(): ReturnType<React.FC> {
     return (
       <div className="h-full">
         <AppHeader />
-        <Error error={listQuery.error} showGoHome />
+        <ErrorPage error={listQuery.error} showGoHome />
       </div>
     );
 
@@ -81,4 +82,14 @@ function ListPage(): ReturnType<React.FC> {
 
 export const Route = createFileRoute("/_app/list/$listId")({
   component: ListPage,
+  loader: async ({ params }) => {
+    const { listId } = params;
+    const res = await api.lists[":listId"].$get({ param: { listId } });
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    const list = await res.json();
+    console.log(list);
+    return list;
+  },
 });
