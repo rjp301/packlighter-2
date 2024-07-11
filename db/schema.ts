@@ -17,4 +17,4 @@ export const zCategory = z.object({
   items: z.array(zCategoryItem).default([]),
 });
 
-export const zListCategories = z.array(zCategory).default([]);
+export const zListCategories = z.array(zCategory).catch([]);

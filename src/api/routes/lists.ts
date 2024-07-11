@@ -16,6 +16,7 @@ import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
 import { categoryRoutes } from "./categories";
 import { zListCategories } from "db/schema";
+import type { ExpandedList } from "db/types";
 
 const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
 const listIdValidator = zValidator(
@@ -80,10 +81,13 @@ const list = new Hono()
       .where(and(eq(List.id, listId), eq(List.userId, userId)))
       .then((rows) => rows[0]);
 
-    const parsedCategories = zListCategories.safeParse(list.categories);
-    list.categories = parsedCategories.success ? parsedCategories.data : [];
+    if (!list) {
+      return c.json({ error: "List not found" }, 404);
+    }
 
-    return c.json(list);
+    const categories = zListCategories.parse(list.categories);
+    const result: ExpandedList = { ...list, categories };
+    return c.json(result);
   })
   .patch(
     "/",
