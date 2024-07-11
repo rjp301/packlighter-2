@@ -1,7 +1,6 @@
 import { initCategory } from "db/init";
-import { zCategory } from "db/schema";
 import type { ExpandedCategory } from "db/types";
-import { createStore } from "zustand";
+import { create } from "zustand";
 
 type Updater<T> = (id: string, value: Partial<T>) => void;
 type Remover = (id: string) => void;
@@ -21,10 +20,12 @@ interface Actions {
   updateCategory: Updater<ExpandedCategory>;
   deleteCategory: Remover;
 
+  
+
   reset: () => void;
 }
 
-export const listStore = createStore<State & Actions>()((set) => ({
+export const useListStore = create<State & Actions>()((set) => ({
   ...initialState,
   setCategories: (categories) => set({ categories }),
   addCategory: (category) =>

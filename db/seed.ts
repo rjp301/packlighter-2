@@ -25,6 +25,7 @@ export default async function seed() {
     })
     .returning()
     .then((rows) => rows[0]);
+  console.log(`✅ Seeded user`);
 
   const items = await db
     .insert(Item)
@@ -42,6 +43,9 @@ export default async function seed() {
     .returning();
   console.log(`✅ Seeded ${items.length} items`);
 
+  let numCategoryItems = 0;
+  let numCategories = 0;
+
   const lists = await db
     .insert(List)
     .values(
@@ -51,12 +55,14 @@ export default async function seed() {
         name,
         description,
         categories: randomLengthArray(2, 7).map(() => {
-          const categoryItems = randomLengthArray(2, 7).map(() =>
-            initCategoryItem({
+          numCategories++;
+          const categoryItems = randomLengthArray(2, 7).map(() => {
+            numCategoryItems++;
+            return initCategoryItem({
               itemId: randomItemFromArray(items).id,
               quantity: randomNumberWithinRange(1, 10),
-            }),
-          );
+            });
+          });
           return initCategory({
             name: randomItemFromArray(categoryNames),
             items: categoryItems,
@@ -66,4 +72,6 @@ export default async function seed() {
     )
     .returning();
   console.log(`✅ Seeded ${lists.length} lists`);
+  console.log(`✅ Seeded ${numCategories} categories`);
+  console.log(`✅ Seeded ${numCategoryItems} category items`);
 }

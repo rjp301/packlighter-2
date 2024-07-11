@@ -1,5 +1,3 @@
-import type { ExpandedCategory } from "../../../db/types";
-
 const weightUnitOptions = ["g", "kg", "oz", "lb"] as const;
 export type WeightUnit = (typeof weightUnitOptions)[number];
 
@@ -35,12 +33,3 @@ export const getItemWeightInUnit = (
   }
   return NaN;
 };
-
-export const getCategoryWeight = (
-  category: ExpandedCategory,
-  unit: WeightUnit,
-) =>
-  category.items.reduce((acc, item) => {
-    const itemWeight = getItemWeightInUnit(item.itemData, unit);
-    return acc + itemWeight * item.quantity;
-  }, 0);

@@ -6,9 +6,9 @@ import { List, db, eq, and, max } from "astro:db";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
 import { zListCategories } from "db/schema";
-import type { ExpandedList } from "db/types";
+import type { ExpandedList, ExpandedListInsert } from "db/types";
 
-const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
+const listUpdateSchema = z.custom<ExpandedListInsert>();
 const listIdValidator = zValidator(
   "param",
   z.object({ listId: validIdSchema(List) }),

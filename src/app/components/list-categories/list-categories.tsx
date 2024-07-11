@@ -7,10 +7,10 @@ import {
   type OnDragEndResponder,
   type OnDragStartResponder,
 } from "@hello-pangea/dnd";
-import useMutations from "@/app/hooks/use-mutations";
 import { useDraggingStore } from "./dragging-store";
 import Category from "./category";
 import { moveInArray } from "@/app/lib/helpers/move-in-array";
+import { useListStore } from "@/app/lib/list-store";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -19,8 +19,8 @@ type Props = {
 const ListCategories: React.FC<Props> = (props) => {
   const { categories } = props;
 
-  const { reorderCategories, updateCategoryItem, reorderCategoryItems } =
-    useMutations();
+  const { setCategories, updateCategoryItem, reorderCategoryItems } =
+    useListStore();
 
   const { resetDragging, setDraggingCategory, setDraggingCategoryItem } =
     useDraggingStore();

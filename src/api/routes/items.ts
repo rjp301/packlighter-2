@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Hono } from "hono";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
-import { CategoryItem, Item, db, eq } from "astro:db";
+import { Item, db, eq } from "astro:db";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 
 const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
@@ -21,7 +21,6 @@ export const itemRoutes = new Hono()
   .delete("/:itemId", itemIdValidator, async (c) => {
     const userId = c.get("user").id;
     const { itemId } = c.req.valid("param");
-    await db.delete(CategoryItem).where(eq(CategoryItem.itemId, itemId));
     await db
       .delete(Item)
       .where(idAndUserIdFilter(Item, { userId, id: itemId }));
