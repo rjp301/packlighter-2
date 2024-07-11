@@ -1,3 +1,4 @@
+import { initCategory } from "db/init";
 import { zCategory } from "db/schema";
 import type { ExpandedCategory } from "db/types";
 import { createStore } from "zustand";
@@ -27,10 +28,9 @@ export const listStore = createStore<State & Actions>()((set) => ({
   ...initialState,
   setCategories: (categories) => set({ categories }),
   addCategory: (category) =>
-    set((state) => {
-      const newCategory = zCategory.parse(category);
-      return { categories: [...state.categories, newCategory] };
-    }),
+    set((state) => ({
+      categories: [...state.categories, initCategory(category)],
+    })),
   updateCategory: (id, value) =>
     set((state) => ({
       categories: state.categories.map((c) =>

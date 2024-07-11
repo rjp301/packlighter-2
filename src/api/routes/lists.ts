@@ -2,19 +2,9 @@ import { z } from "zod";
 import { Hono } from "hono";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
-import {
-  Category,
-  CategoryItem,
-  List,
-  db,
-  eq,
-  and,
-  inArray,
-  max,
-} from "astro:db";
+import { List, db, eq, and, max } from "astro:db";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
-import { categoryRoutes } from "./categories";
 import { zListCategories } from "db/schema";
 import type { ExpandedList } from "db/types";
 
@@ -109,38 +99,12 @@ const list = new Hono()
   .delete("/", listIdValidator, async (c) => {
     const userId = c.get("user").id;
     const { listId } = c.req.valid("param");
-    const listCategories = await db
-      .select()
-      .from(Category)
-      .where(eq(Category.listId, listId));
-
-    await db.delete(CategoryItem).where(
-      inArray(
-        CategoryItem.categoryId,
-        listCategories.map((c) => c.id),
-      ),
-    );
-    await db.delete(Category).where(eq(Category.listId, listId));
     await db
       .delete(List)
       .where(idAndUserIdFilter(List, { userId, id: listId }))
       .returning()
       .then((rows) => rows[0]);
     return c.json({ success: true });
-  })
-  .post("/unpack", listIdValidator, async (c) => {
-    const { listId } = c.req.valid("param");
-    const categoryItems = await db
-      .select({ id: CategoryItem.id })
-      .from(CategoryItem)
-      .leftJoin(Category, eq(Category.id, CategoryItem.categoryId))
-      .where(eq(Category.listId, listId));
-    const ids = categoryItems.filter((i) => i !== null).map((ci) => ci.id!);
-    await db
-      .update(CategoryItem)
-      .set({ packed: false })
-      .where(inArray(CategoryItem.id, ids));
-  })
-  .route("/categories", categoryRoutes);
+  });
 
 export const listRoutes = new Hono().route("/", lists).route("/:listId", list);
