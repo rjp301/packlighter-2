@@ -1,8 +1,8 @@
-import type { ExpandedCategory } from "db/types";
 import type { DraggableProvided } from "@hello-pangea/dnd";
+import type { Category } from "db/schema";
 
 export interface CategoryProps {
-  category: ExpandedCategory;
+  category: Category;
   provided: DraggableProvided;
   isDragging?: boolean;
 }

@@ -20,10 +20,10 @@ import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
-import useMutations from "@/app/hooks/use-mutations";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import CategoryItem from "../category-item";
 import type { CategoryProps } from "./types";
+import { useListStore } from "@/app/lib/list-store";
 
 const ListCategory: React.FC<CategoryProps> = (props) => {
   const { category, provided, isDragging } = props;
@@ -36,8 +36,8 @@ const ListCategory: React.FC<CategoryProps> = (props) => {
     deleteCategory,
     toggleCategoryPacked,
     updateCategory,
-    addItemToCategory,
-  } = useMutations();
+    addCategoryItem,
+  } = useListStore();
 
   if (!list) return null;
 
@@ -56,10 +56,8 @@ const ListCategory: React.FC<CategoryProps> = (props) => {
             {list.showPacked && (
               <TableHead className="w-6">
                 <Checkbox
-                  checked={category.packed}
-                  onCheckedChange={() =>
-                    toggleCategoryPacked.mutate({ categoryId: category.id })
-                  }
+                  checked={category.items.every((item) => item.packed)}
+                  onCheckedChange={() => toggleCategoryPacked(category.id)}
                 />
               </TableHead>
             )}
@@ -76,10 +74,7 @@ const ListCategory: React.FC<CategoryProps> = (props) => {
                 placeholder="Category Name"
                 currentValue={category.name ?? ""}
                 onUpdate={(value) =>
-                  updateCategory.mutate({
-                    categoryId: category.id,
-                    data: { name: value },
-                  })
+                  updateCategory(category.id, { name: value })
                 }
               />
             </TableHead>
@@ -88,14 +83,7 @@ const ListCategory: React.FC<CategoryProps> = (props) => {
             )}
             <TableHead className="w-[5rem]">Qty</TableHead>
             <TableHead className="w-6 pl-0">
-              <DeleteButton
-                handleDelete={() =>
-                  deleteCategory.mutate({
-                    categoryId: category.id,
-                    categoryName: category.name,
-                  })
-                }
-              />
+              <DeleteButton handleDelete={() => deleteCategory(category.id)} />
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -127,9 +115,7 @@ const ListCategory: React.FC<CategoryProps> = (props) => {
               <Button
                 variant="linkMuted"
                 size="sm"
-                onClick={() =>
-                  addItemToCategory.mutate({ categoryId: category.id })
-                }
+                onClick={() => addCategoryItem(category.id)}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Item

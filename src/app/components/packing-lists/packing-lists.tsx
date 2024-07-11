@@ -20,7 +20,7 @@ import {
 } from "@hello-pangea/dnd";
 import { moveInArray } from "@/app/lib/helpers/move-in-array";
 
-export default function PackingLists(): ReturnType<React.FC> {
+const PackingLists: React.FC = () => {
   const listsQuery = useQuery(listsQueryOptions);
   const { addList, reorderLists } = useMutations();
 
@@ -87,4 +87,6 @@ export default function PackingLists(): ReturnType<React.FC> {
       </DragDropContext>
     </div>
   );
-}
+};
+
+export default PackingLists;

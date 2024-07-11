@@ -1,7 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 import { api } from "./client";
+import type { ListSelect } from "db/types";
 
-export const listsQueryOptions = queryOptions({
+export const listsQueryOptions = queryOptions<ListSelect[]>({
   queryKey: ["lists"],
   queryFn: async () => {
     const res = await api.lists.$get();

@@ -1,4 +1,3 @@
-import type { ExpandedCategory } from "db/types";
 import React from "react";
 import {
   DragDropContext,
@@ -9,18 +8,17 @@ import {
 } from "@hello-pangea/dnd";
 import { useDraggingStore } from "./dragging-store";
 import Category from "./category";
-import { moveInArray } from "@/app/lib/helpers/move-in-array";
 import { useListStore } from "@/app/lib/list-store";
+import type { Category as CategoryType } from "db/schema";
 
 type Props = {
-  categories: ExpandedCategory[];
+  categories: CategoryType[];
 };
 
 const ListCategories: React.FC<Props> = (props) => {
   const { categories } = props;
 
-  const { setCategories, updateCategoryItem, reorderCategoryItems } =
-    useListStore();
+  const { reorderCategoryItem, reorderCategory } = useListStore();
 
   const { resetDragging, setDraggingCategory, setDraggingCategoryItem } =
     useDraggingStore();
@@ -49,35 +47,23 @@ const ListCategories: React.FC<Props> = (props) => {
       console.log("category-item");
       console.log(draggableId);
 
-      if (source.droppableId !== destination.droppableId) {
-        updateCategoryItem.mutate({
-          categoryId: source.droppableId,
-          categoryItemId: draggableId,
-          data: {
-            categoryId: destination.droppableId,
-          },
-        });
-        return;
-      }
+      // if (source.droppableId !== destination.droppableId) {
+      //   updateCategoryItem(
+      //     source.droppableId,
+      //     draggableId,
+      //     data: {
+      //       categoryId: destination.droppableId,
+      //     },
+      //   );
+      //   return;
+      // }
 
-      const currentCategoryItems =
-        categories.find((i) => i.id === source.droppableId)?.items ?? [];
-      const newCategoryItems = moveInArray(
-        currentCategoryItems,
-        source.index,
-        destination.index,
-      );
-      reorderCategoryItems.mutate({
-        categoryId: source.droppableId,
-        categoryItems: newCategoryItems,
-      });
-
+      reorderCategoryItem(source.droppableId, source.index, destination.index);
       return;
     }
 
     if (type === "category") {
-      const newItems = moveInArray(categories, source.index, destination.index);
-      reorderCategories.mutate(newItems);
+      reorderCategory(source.index, destination.index);
       return;
     }
   };
