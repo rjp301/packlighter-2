@@ -5,7 +5,7 @@ import { Button } from "@/app/components/ui/button";
 import { Card } from "@/app/components/ui/card";
 import PackingList from "./packing-list";
 import Loader from "@/app/components/base/loader";
-import Error from "@/app/components/base/error";
+import ErrorPage from "@/app/components/base/error-page";
 
 import { cn } from "@/app/lib/utils";
 import Placeholder from "@/app/components/base/placeholder";
@@ -64,7 +64,7 @@ export default function PackingLists(): ReturnType<React.FC> {
               )}
             >
               {listsQuery.isLoading && <Loader />}
-              {listsQuery.isError && <Error error={listsQuery.error} />}
+              {listsQuery.isError && <ErrorPage error={listsQuery.error} />}
               {listsQuery.isSuccess &&
                 listsQuery.data?.map((list, index) => (
                   <Draggable key={list.id} draggableId={list.id} index={index}>

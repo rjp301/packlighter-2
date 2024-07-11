@@ -1,13 +1,13 @@
 import { initCategory } from "db/init";
-import type { ExpandedCategory } from "db/types";
+import type { Category } from "db/schema";
 import { create } from "zustand";
 
 type Updater<T> = (id: string, value: Partial<T>) => void;
 type Remover = (id: string) => void;
-type Creator<T> = (value: Partial<T>) => void;
+type Creator<T> = (value?: Partial<T>) => void;
 
 interface State {
-  categories: ExpandedCategory[];
+  categories: Category[];
 }
 
 const initialState: State = {
@@ -15,12 +15,10 @@ const initialState: State = {
 };
 
 interface Actions {
-  setCategories: (categories: ExpandedCategory[]) => void;
-  addCategory: Creator<ExpandedCategory>;
-  updateCategory: Updater<ExpandedCategory>;
+  setCategories: (categories: Category[]) => void;
+  addCategory: Creator<Category>;
+  updateCategory: Updater<Category>;
   deleteCategory: Remover;
-
-  
 
   reset: () => void;
 }

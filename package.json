@@ -8,6 +8,7 @@
     "build": "astro check && astro build --remote",
     "preview": "astro preview",
     "astro": "astro",
+    "test": "vitest",
     "check:types": "tsc --noEmit",
     "check:lint": "eslint .",
     "db:push": "drizzle-kit push",
@@ -75,6 +76,7 @@
     "@types/uuid": "^9.0.8",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.1",
-    "tsx": "^4.10.2"
+    "tsx": "^4.10.2",
+    "vitest": "^2.0.2"
   }
 }

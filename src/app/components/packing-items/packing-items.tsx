@@ -7,7 +7,7 @@ import { Button } from "@/app/components/ui/button";
 import { ArrowDownWideNarrow, Table } from "lucide-react";
 import PackingItem from "./packing-item";
 import { useSidebarStore } from "@/app/components/sidebar/sidebar-store";
-import Error from "@/app/components/base/error";
+import ErrorPage from "@/app/components/base/error-page";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -128,7 +128,7 @@ const PackingItems: React.FC = () => {
       </header>
       <Card className="h-full flex-1 overflow-y-auto overflow-x-hidden">
         {itemsQuery.isLoading && <Loader />}
-        {itemsQuery.isError && <Error error={itemsQuery.error} />}
+        {itemsQuery.isError && <ErrorPage error={itemsQuery.error} />}
         {itemsQuery.isSuccess &&
           itemsQuery.data
             .filter((item) => filterItems(item, filterQuery))

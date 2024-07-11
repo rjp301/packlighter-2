@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AppHeader from "@/app/components/app-header";
-import ErrorPage from "@/app/components/base/error";
+import ErrorPage from "@/app/components/base/error-page";
 import Loader from "@/app/components/base/loader";
 import ServerInput from "@/app/components/input/server-input";
 import ListSettings from "@/app/components/list-settings";
@@ -15,12 +15,14 @@ import { listQueryOptions } from "../lib/queries";
 import useMutations from "../hooks/use-mutations";
 import ListCategories from "../components/list-categories/list-categories";
 import { api } from "../lib/client";
+import { useListStore } from "../lib/list-store";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
   const listQuery = useQuery(listQueryOptions(listId));
 
-  const { updateList, addCategory } = useMutations();
+  const { updateList } = useMutations();
+  const { addCategory } = useListStore();
 
   if (listQuery.isLoading)
     return (
@@ -69,7 +71,7 @@ function ListPage(): ReturnType<React.FC> {
             variant="linkMuted"
             size="sm"
             className="ml-2 w-min"
-            onClick={() => addCategory.mutate()}
+            onClick={() => addCategory()}
           >
             <Plus size="1rem" className="mr-2" />
             Add Category

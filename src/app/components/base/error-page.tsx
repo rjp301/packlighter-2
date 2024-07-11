@@ -9,7 +9,7 @@ interface Props {
   retry?: () => void;
 }
 
-const Error: React.FC<Props> = (props) => {
+const ErrorPage: React.FC<Props> = (props) => {
   const { error, showGoHome, retry } = props;
 
   const status = error && "status" in error ? (error.status as number) : 500;
@@ -18,15 +18,15 @@ const Error: React.FC<Props> = (props) => {
     "An unknown error occurred. Please try again later or contact support.";
 
   return (
-    <div className="flex-1 flex items-center justify-center h-full">
-      <div className="flex flex-col gap-4 max-w-sm w-full p-4 max-h-[50%] h-full">
-        <div className="flex flex-row gap-4 items-center">
-          <Bug size="3rem" className="text-primary flex-shrink-0" />
+    <div className="flex h-full flex-1 items-center justify-center">
+      <div className="flex h-full max-h-[50%] w-full max-w-sm flex-col gap-4 p-4">
+        <div className="flex flex-row items-center gap-4">
+          <Bug size="3rem" className="flex-shrink-0 text-primary" />
           <div className="flex flex-col">
-            <h2 className="font-bold mr-2 text-lg">
+            <h2 className="mr-2 text-lg font-bold">
               <span className="">{status} Error</span>
             </h2>
-            <p className="text-muted-foreground text-sm">{message}</p>
+            <p className="text-sm text-muted-foreground">{message}</p>
           </div>
         </div>
         <div className="flex flex-col gap-2">
@@ -42,4 +42,4 @@ const Error: React.FC<Props> = (props) => {
   );
 };
 
-export default Error;
+export default ErrorPage;
