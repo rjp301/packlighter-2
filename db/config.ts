@@ -44,6 +44,8 @@ const List = defineTable({
     name: column.text({ default: "" }),
     description: column.text({ default: "" }),
 
+    categories: column.json({ default: [] }),
+
     showImages: column.boolean({ default: false }),
     showPrices: column.boolean({ default: false }),
     showPacked: column.boolean({ default: false }),
