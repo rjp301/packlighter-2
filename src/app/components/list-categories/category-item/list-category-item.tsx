@@ -16,21 +16,23 @@ import {
 } from "@/app/components/ui/select";
 import useListId from "@/app/hooks/use-list-id";
 
-import { listQueryOptions } from "@/app/lib/queries";
+import { itemsQueryOptions, listQueryOptions } from "@/app/lib/queries";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/use-mutations";
 import type { CategoryItemProps } from "./types";
 
 const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
-  const { item, provided, isDragging } = props;
+  const { categoryItem, provided, isDragging, update, remove } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
 
   const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
+  const items = queryClient.getQueryData(itemsQueryOptions.queryKey);
+  const item = items?.find((item) => item.id === categoryItem.itemId);
 
-  const { deleteCategoryItem, updateCategoryItem, updateItem } = useMutations();
+  const { updateItem } = useMutations();
 
-  if (!list) return null;
+  if (!list || !item) return null;
 
   return (
     <TableRow
@@ -41,14 +43,8 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
       {list.showPacked && (
         <TableCell className="py-0">
           <Checkbox
-            checked={item.packed}
-            onCheckedChange={(packed) =>
-              updateCategoryItem.mutate({
-                categoryItemId: item.id,
-                categoryId: item.categoryId,
-                data: { packed: Boolean(packed) },
-              })
-            }
+            checked={categoryItem.packed}
+            onCheckedChange={(packed) => update({ packed: Boolean(packed) })}
           />
         </TableCell>
       )}
@@ -57,8 +53,8 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
       </TableCell>
       {list.showImages && (
         <TableCell>
-          <div className={cn(!item.itemData.image && "absolute inset-2")}>
-            <ItemImage item={item.itemData} />
+          <div className={cn(!item.image && "absolute inset-2")}>
+            <ItemImage item={item} />
           </div>
         </TableCell>
       )}
@@ -66,10 +62,10 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
         <ServerInput
           inline
           placeholder="Name"
-          currentValue={item.itemData.name}
+          currentValue={item.name}
           onUpdate={(name) =>
             updateItem.mutate({
-              itemId: item.itemData.id,
+              itemId: item.id,
               data: { name },
             })
           }
@@ -79,10 +75,10 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
         <ServerInput
           inline
           placeholder="Description"
-          currentValue={item.itemData.description}
+          currentValue={item.description}
           onUpdate={(description) =>
             updateItem.mutate({
-              itemId: item.itemData.id,
+              itemId: item.id,
               data: { description },
             })
           }
@@ -97,19 +93,19 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
               min={0}
               selectOnFocus
               className="text-right"
-              currentValue={item.itemData.weight.toLocaleString()}
+              currentValue={item.weight.toLocaleString()}
               onUpdate={(weight) =>
                 updateItem.mutate({
-                  itemId: item.itemData.id,
+                  itemId: item.id,
                   data: { weight: Number(weight) },
                 })
               }
             />
             <Select
-              value={item.itemData.weightUnit}
+              value={item.weightUnit}
               onValueChange={(value) =>
                 updateItem.mutate({
-                  itemId: item.itemData.id,
+                  itemId: item.id,
                   data: { weightUnit: value as WeightUnit },
                 })
               }
@@ -132,25 +128,12 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
           type="number"
           min={1}
           selectOnFocus
-          currentValue={item.quantity.toLocaleString()}
-          onUpdate={(quantity) =>
-            updateCategoryItem.mutate({
-              categoryItemId: item.id,
-              categoryId: item.categoryId,
-              data: { quantity: Number(quantity) },
-            })
-          }
+          currentValue={categoryItem.quantity.toLocaleString()}
+          onUpdate={(quantity) => update({ quantity: Number(quantity) })}
         />
       </TableCell>
       <TableCell className="py-0.5 pl-0">
-        <DeleteButton
-          handleDelete={() =>
-            deleteCategoryItem.mutate({
-              categoryItemId: item.id,
-              categoryId: item.categoryId,
-            })
-          }
-        />
+        <DeleteButton handleDelete={() => remove()} />
       </TableCell>
     </TableRow>
   );

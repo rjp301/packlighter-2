@@ -37,6 +37,8 @@ const ListCategory: React.FC<CategoryProps> = (props) => {
     toggleCategoryPacked,
     updateCategory,
     addCategoryItem,
+    deleteCategoryItem,
+    updateCategoryItem,
   } = useListStore();
 
   if (!list) return null;
@@ -95,8 +97,12 @@ const ListCategory: React.FC<CategoryProps> = (props) => {
                   {(provided) => (
                     <CategoryItem
                       key={item.id}
-                      item={item}
+                      categoryItem={item}
                       provided={provided}
+                      remove={() => deleteCategoryItem(category.id, item.id)}
+                      update={(data) =>
+                        updateCategoryItem(category.id, item.id, data)
+                      }
                     />
                   )}
                 </Draggable>
@@ -124,7 +130,7 @@ const ListCategory: React.FC<CategoryProps> = (props) => {
             {list.showWeights && (
               <TableCell>
                 <div className="flex justify-end gap-2">
-                  <span>{formatWeight(category.weight)}</span>
+                  <span>{formatWeight(0)}</span>
                   <span className="min-w-8">{list.weightUnit ?? "g"}</span>
                 </div>
               </TableCell>

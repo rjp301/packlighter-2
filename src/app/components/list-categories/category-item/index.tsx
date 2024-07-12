@@ -10,7 +10,7 @@ import { useDraggingStore } from "../dragging-store";
 const CategoryItem: React.FC<CategoryItemProps> = (props) => {
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
   const isDragging = useDraggingStore(
-    (state) => state.draggingCategoryItemId === props.item.id,
+    (state) => state.draggingCategoryItemId === props.categoryItem.id,
   );
 
   if (isMobile) {

@@ -11,11 +11,11 @@ import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
-import useMutations from "@/app/hooks/use-mutations";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { Badge } from "../../ui/badge";
 import CategoryItem from "../category-item";
 import type { CategoryProps } from "./types";
+import { useListStore } from "@/app/lib/list-store";
 
 const ListCategoryMobile: React.FC<CategoryProps> = (props) => {
   const { category, provided, isDragging } = props;
@@ -28,8 +28,10 @@ const ListCategoryMobile: React.FC<CategoryProps> = (props) => {
     deleteCategory,
     toggleCategoryPacked,
     updateCategory,
-    addItemToCategory,
-  } = useMutations();
+    addCategoryItem,
+    updateCategoryItem,
+    deleteCategoryItem,
+  } = useListStore();
 
   if (!list) return null;
 
@@ -46,10 +48,8 @@ const ListCategoryMobile: React.FC<CategoryProps> = (props) => {
         {list.showPacked && (
           <Checkbox
             className="mr-2"
-            checked={category.packed}
-            onCheckedChange={() =>
-              toggleCategoryPacked.mutate({ categoryId: category.id })
-            }
+            checked={category.items.every((item) => item.packed)}
+            onCheckedChange={() => toggleCategoryPacked(category.id)}
           />
         )}
         <Gripper {...provided.dragHandleProps} isGrabbing={isDragging} />
@@ -58,26 +58,14 @@ const ListCategoryMobile: React.FC<CategoryProps> = (props) => {
           className="px-1 py-0.5 text-base font-semibold"
           placeholder="Category Name"
           currentValue={category.name ?? ""}
-          onUpdate={(value) =>
-            updateCategory.mutate({
-              categoryId: category.id,
-              data: { name: value },
-            })
-          }
+          onUpdate={(value) => updateCategory(category.id, { name: value })}
         />
         {list.showWeights && (
           <Badge className="shrink-0 rounded-full" variant="secondary">
-            {`${formatWeight(category.weight)} ${list.weightUnit ?? "g"}`}
+            {`${formatWeight(0)} ${list.weightUnit ?? "g"}`}
           </Badge>
         )}
-        <DeleteButton
-          handleDelete={() =>
-            deleteCategory.mutate({
-              categoryId: category.id,
-              categoryName: category.name,
-            })
-          }
-        />
+        <DeleteButton handleDelete={() => deleteCategory(category.id)} />
       </header>
       <Droppable droppableId={category.id} type="category-item">
         {(provided) => (
@@ -85,7 +73,15 @@ const ListCategoryMobile: React.FC<CategoryProps> = (props) => {
             {category.items.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided) => (
-                  <CategoryItem key={item.id} item={item} provided={provided} />
+                  <CategoryItem
+                    key={item.id}
+                    categoryItem={item}
+                    provided={provided}
+                    remove={() => deleteCategoryItem(category.id, item.id)}
+                    update={(data) =>
+                      updateCategoryItem(category.id, item.id, data)
+                    }
+                  />
                 )}
               </Draggable>
             ))}
@@ -97,7 +93,7 @@ const ListCategoryMobile: React.FC<CategoryProps> = (props) => {
         <Button
           variant="linkMuted"
           size="sm"
-          onClick={() => addItemToCategory.mutate({ categoryId: category.id })}
+          onClick={() => addCategoryItem(category.id)}
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Item

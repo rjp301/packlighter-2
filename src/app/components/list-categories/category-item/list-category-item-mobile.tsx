@@ -6,8 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/app/lib/utils";
 import useListId from "@/app/hooks/use-list-id";
 
-import { listQueryOptions } from "@/app/lib/queries";
-import useMutations from "@/app/hooks/use-mutations";
+import { itemsQueryOptions, listQueryOptions } from "@/app/lib/queries";
 import { Badge } from "../../ui/badge";
 import { formatWeight } from "@/app/lib/utils";
 import QuantityEditor from "../../quantity-editor";
@@ -16,24 +15,21 @@ import ItemImage from "../../item-image";
 import type { CategoryItemProps } from "./types";
 
 const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
-  const { item, provided, isDragging } = props;
+  const { categoryItem, provided, isDragging, update, remove } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
 
   const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
-  const { deleteCategoryItem, updateCategoryItem } = useMutations();
+  const items = queryClient.getQueryData(itemsQueryOptions.queryKey);
+  const item = items?.find((item) => item.id === categoryItem.itemId);
 
   const [editorOpen, setEditorOpen] = React.useState(false);
 
-  if (!list) return null;
+  if (!list || !item) return null;
 
   return (
     <>
-      <ItemEditor
-        item={item.itemData}
-        isOpen={editorOpen}
-        setIsOpen={setEditorOpen}
-      />
+      <ItemEditor item={item} isOpen={editorOpen} setIsOpen={setEditorOpen} />
       <div
         ref={provided.innerRef}
         {...provided.draggableProps}
@@ -45,18 +41,12 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
         {list.showPacked && (
           <Checkbox
             className="mr-2"
-            checked={item.packed}
-            onCheckedChange={(packed) =>
-              updateCategoryItem.mutate({
-                categoryItemId: item.id,
-                categoryId: item.categoryId,
-                data: { packed: Boolean(packed) },
-              })
-            }
+            checked={categoryItem.packed}
+            onCheckedChange={(packed) => update({ packed: Boolean(packed) })}
           />
         )}
         <Gripper {...provided.dragHandleProps} />
-        {list.showImages && <ItemImage item={item.itemData} />}
+        {list.showImages && <ItemImage item={item} />}
         <div
           className="flex flex-1 flex-col gap-1"
           onClick={() => setEditorOpen(true)}
@@ -64,25 +54,19 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
           <h3
             className={cn(
               "truncate",
-              !item.itemData.name && "italic text-muted-foreground",
+              !item.name && "italic text-muted-foreground",
             )}
           >
-            {item.itemData.name || "Unnamed Item"}
+            {item.name || "Unnamed Item"}
           </h3>
-          {item.itemData.description && (
-            <p className="text-muted-foreground">{item.itemData.description}</p>
+          {item.description && (
+            <p className="text-muted-foreground">{item.description}</p>
           )}
         </div>
 
         <QuantityEditor
-          quantity={item.quantity}
-          setQuantity={(quantity) =>
-            updateCategoryItem.mutate({
-              categoryItemId: item.id,
-              categoryId: item.categoryId,
-              data: { quantity: Number(quantity) },
-            })
-          }
+          quantity={categoryItem.quantity}
+          setQuantity={(quantity) => update({ quantity: Number(quantity) })}
         />
         {list.showWeights && (
           <Badge
@@ -90,17 +74,10 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
             variant="secondary"
             onClick={() => setEditorOpen(true)}
           >
-            {`${formatWeight(item.itemData.weight)} ${item.itemData.weightUnit}`}
+            {`${formatWeight(item.weight)} ${item.weightUnit}`}
           </Badge>
         )}
-        <DeleteButton
-          handleDelete={() =>
-            deleteCategoryItem.mutate({
-              categoryItemId: item.id,
-              categoryId: item.categoryId,
-            })
-          }
-        />
+        <DeleteButton handleDelete={remove} />
       </div>
     </>
   );
