@@ -3,6 +3,7 @@ import { z, ZodError } from "zod";
 const envSchema = z.object({
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
+  DB_STRING: z.string(),
   PROD: z.coerce.boolean().default(false),
 });
 
