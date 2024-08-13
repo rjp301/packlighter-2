@@ -1,4 +1,5 @@
 import { z, ZodError } from "zod";
+import "dotenv/config";
 
 const envSchema = z.object({
   GITHUB_CLIENT_ID: z.string(),

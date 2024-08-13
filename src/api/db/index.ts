@@ -1,9 +1,9 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Client } from "pg";
-import env from "../env";
+import "dotenv/config";
 
 const client = new Client({
-  connectionString: env.DB_STRING,
+  connectionString: process.env.DB_STRING,
 });
 
 await client.connect();
