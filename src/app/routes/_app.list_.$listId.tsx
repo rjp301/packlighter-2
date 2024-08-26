@@ -12,6 +12,7 @@ import { listQueryOptions } from "../lib/queries";
 import useMutations from "../hooks/use-mutations";
 import ListCategories from "../components/list-categories/list-categories";
 import ListDescription from "../components/list-description";
+import ListChart from "../components/list-chart";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
@@ -52,6 +53,7 @@ function ListPage(): ReturnType<React.FC> {
       </AppHeader>
       <section className="flex-1 overflow-auto">
         <div className="container2 flex flex-col gap-4 py-4 pb-20">
+          <ListChart list={listQuery.data} />
           <ListDescription list={listQuery.data} />
           <ListCategories categories={listQuery.data.categories} />
         </div>
