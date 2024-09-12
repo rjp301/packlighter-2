@@ -17,12 +17,9 @@ import { Earth } from "lucide-react";
       <h1 class="">LighterTravel</h1>
       <p class="">The packing tool of travel champions</p>
     </section>
-    <section class="flex flex-col gap-2 items-center">
-      <LoginButton className="w-full" provider="google" />
-      <span class="text-xs text-muted-foreground"
-        >More login options coming soon!</span
-      >
-      <!-- <LoginButton className="w-full" provider="github" /> -->
+    <section class="grid gap-2 w-full">
+      <LoginButton provider="google" />
+      <LoginButton provider="guest" />
     </section>
   </main>
 </RootLayout>
