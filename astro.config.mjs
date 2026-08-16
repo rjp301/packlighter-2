@@ -1,9 +1,9 @@
-import { defineConfig, envField } from "astro/config";
+import { defineConfig } from "astro/config";
 
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
 import react from "@astrojs/react";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
@@ -12,15 +12,16 @@ export default defineConfig({
   security: {
     checkOrigin: true,
   },
-  integrations: [tailwind({ applyBaseStyles: false }), react()],
+  integrations: [react()],
   vite: {
     plugins: [
-      TanStackRouterVite({
+      tanstackRouter({
         target: "react",
         autoCodeSplitting: true,
         routesDirectory: "./src/app/routes",
         generatedRouteTree: "./src/app/routeTree.gen.ts",
       }),
+      tailwindcss(),
     ],
   },
   output: "server",

@@ -1,5 +1,5 @@
 import { zCategoryItemInsert, zItemInsert } from "@/lib/types";
-import { z } from "zod";
+import { z } from "astro/zod";
 
 export const create = z.object({
   data: zCategoryItemInsert,

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "astro/zod";
 import { zListInsert } from "@/lib/types";
 
 export const getAll = z.any();

@@ -1,6 +1,6 @@
 import { Category, CategoryItem, List, ListUser } from "@/db/schema";
 import { eq, max, and, ne, desc, notInArray } from "drizzle-orm";
-import { ActionError, type ActionHandler } from "astro:actions";
+import { ActionError } from "astro:actions";
 import {
   getExpandedCategory,
   isAuthorized,
@@ -12,12 +12,13 @@ import { v4 as uuid } from "uuid";
 import * as categoryInputs from "./categories.inputs";
 import type { ExpandedCategory, OtherCategory } from "@/lib/types";
 import { createDb } from "@/db";
+import type { ActionHandler } from "node_modules/astro/dist/actions/runtime/types";
 
 export const getFromOtherLists: ActionHandler<
   typeof categoryInputs.getFromOtherLists,
   OtherCategory[]
 > = async ({ listId }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   await userHasListAccess(c, { listId, userId });
 
@@ -40,7 +41,7 @@ export const copyToList: ActionHandler<
   typeof categoryInputs.copyToList,
   ExpandedCategory
 > = async ({ categoryId, listId }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   await userHasListAccess(c, { userId, listId });
 
@@ -109,7 +110,7 @@ export const create: ActionHandler<
   typeof categoryInputs.create,
   ExpandedCategory
 > = async ({ listId, data }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   await userHasListAccess(c, { userId, listId });
 
@@ -134,7 +135,7 @@ export const remove: ActionHandler<typeof categoryInputs.remove, null> = async (
   { categoryId },
   c,
 ) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [{ listId }] = await db
@@ -151,7 +152,7 @@ export const update: ActionHandler<
   typeof categoryInputs.update,
   ExpandedCategory
 > = async ({ categoryId, data }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [{ listId }] = await db
@@ -198,7 +199,7 @@ export const togglePacked: ActionHandler<
   typeof categoryInputs.togglePacked,
   ExpandedCategory
 > = async ({ categoryId }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [{ listId }] = await db

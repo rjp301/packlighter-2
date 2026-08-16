@@ -1,8 +1,18 @@
-@import "tailwindcss/base";
-@import "@radix-ui/themes/styles.css";
+@layer theme, base, radix-themes, components, utilities;
 
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss" important;
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --shadow-*: initial;
+  --text-*: initial;
+  --rounded-*: initial;
+}
+
+@import "radix-themes-tw";
 
 * {
   @apply border-gray-6;

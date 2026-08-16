@@ -4,16 +4,18 @@ import type { APIContext } from "astro";
 import { createDb } from "@/db";
 import { User } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { getGithubUser, createGithub } from "@/lib/server/oauth";
+import { getGithubUser, createGithub } from "@/lib/oauth";
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
-} from "@/lib/server/lucia";
+} from "@/lib/lucia";
 
 export async function GET(context: APIContext): Promise<Response> {
-  const db = createDb(context.locals.runtime.env);
-  const github = createGithub(context);
+  const { env } = context.locals;
+
+  const db = createDb(env);
+  const github = createGithub(env);
 
   const code = context.url.searchParams.get("code");
   const state = context.url.searchParams.get("state");

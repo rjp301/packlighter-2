@@ -10,7 +10,7 @@ import {
   type weightUnits,
 } from "@/db/schema";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
+import { z } from "astro/zod";
 
 export type WeightUnit = (typeof weightUnits)[number];
 export type WeightType = (typeof weightTypes)[number];

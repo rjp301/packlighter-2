@@ -12,7 +12,12 @@ import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
-import type { CategorySelect, ExpandedList, ListSelect } from "@/lib/types";
+import type {
+  CategorySelect,
+  ExpandedList,
+  ItemSelect,
+  ListSelect,
+} from "@/lib/types";
 
 export default function useMutations() {
   const { listId } = useCurrentList();
@@ -144,7 +149,7 @@ export default function useMutations() {
           );
           if (categoryIdx === -1) return draft;
           // TODO - fix issue with mismatched Ids
-          const item = initItem(itemData);
+          const item = initItem(itemData as ItemSelect);
           const categoryItem = initCategoryItem({
             itemData: item,
             categoryId,

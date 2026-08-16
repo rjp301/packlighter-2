@@ -6,7 +6,7 @@ import { stringify } from "csv/sync";
 import { createDb } from "@/db";
 
 export const GET: APIRoute = async ({ locals }) => {
-  const db = createDb(locals.runtime.env);
+  const db = createDb(locals.env);
   const userId = locals.user?.id;
 
   if (!userId) {

@@ -21,7 +21,7 @@ const policies = await getCollection("policies");
           policies
             .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
             .map((policy) => (
-              <a href={`/policies/${policy.slug}`} class="text-primary">
+              <a href={`/policies/${policy.id}`} class="text-primary">
                 <Card className="min-h-[10rem] p-6 flex flex-col gap-5 items-center justify-center hover:bg-gray-3 transition-colors ease-in">
                   <div class="text-xl font-bold tracking-tight text-center">
                     {policy.data.title}

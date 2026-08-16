@@ -12,10 +12,8 @@ const ViewerList: React.FC<Props> = (props) => {
   const { list } = props;
 
   return (
-    <div className="grid w-full gap-8">
-      <Markdown className="text-sm prose prose-sm max-w-none px-2 dark:prose-invert">
-        {`# ${list.name}\n` + list.description}
-      </Markdown>
+    <div className="prose prose-sm dark:prose-invert grid w-full max-w-none gap-8 px-2 text-sm">
+      <Markdown>{`# ${list.name}\n` + list.description}</Markdown>
       <WeightPanel list={list} />
       {list.categories.map((category) => (
         <ViewerCategory key={category.id} category={category} list={list} />
