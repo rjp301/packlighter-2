@@ -16,16 +16,16 @@ const orientationStyles: Record<
   HTMLAttributes<HTMLElement>["className"]
 > = {
   horizontal:
-    "h-[--line-thickness] left-[--terminal-radius] right-0 before:left-[--negative-terminal-size]",
+    "h-(--line-thickness) left-(--terminal-radius) right-0 before:left-(--negative-terminal-size)",
   vertical:
-    "w-[--line-thickness] top-[--terminal-radius] bottom-0 before:top-[--negative-terminal-size]",
+    "w-(--line-thickness) top-(--terminal-radius) bottom-0 before:top-(--negative-terminal-size)",
 };
 
 const edgeStyles: Record<Edge, HTMLAttributes<HTMLElement>["className"]> = {
-  top: "top-[--line-offset] before:top-[--offset-terminal]",
-  right: "right-[--line-offset] before:right-[--offset-terminal]",
-  bottom: "bottom-[--line-offset] before:bottom-[--offset-terminal]",
-  left: "left-[--line-offset] before:left-[--offset-terminal]",
+  top: "top-(--line-offset) before:top-(--offset-terminal)",
+  right: "right-(--line-offset) before:right-(--offset-terminal)",
+  bottom: "bottom-(--line-offset) before:bottom-(--offset-terminal)",
+  left: "left-(--line-offset) before:left-(--offset-terminal)",
 };
 
 const strokeSize = 2;
@@ -60,7 +60,7 @@ export const DropIndicator: React.FC<Props> = ({ edge, gap, className }) => {
         } as CSSProperties
       }
       className={cn(
-        "pointer-events-none absolute z-50 box-border bg-accent-10 before:absolute before:h-[--terminal-size] before:w-[--terminal-size] before:rounded-full before:border-[length:--line-thickness] before:border-solid before:border-accent-10 before:content-['']",
+        "pointer-events-none absolute z-50 box-border bg-accent-10 before:absolute before:h-(--terminal-size) before:w-(--terminal-size) before:rounded-full before:border-(--line-thickness) before:border-solid before:border-accent-10 before:content-['']",
         orientationStyles[orientation],
         [edgeStyles[edge]],
         className,
