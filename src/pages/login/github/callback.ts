@@ -9,7 +9,7 @@ import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
-} from "@/lib/server/lucia";
+} from "@/lib/lucia";
 
 export async function GET(context: APIContext): Promise<Response> {
   const db = createDb(context.locals.runtime.env);

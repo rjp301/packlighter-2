@@ -5,7 +5,7 @@ import {
 } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { User, UserSession } from "@/db/schema";
-import type { UserSelect, UserSessionInfo } from "../types";
+import type { UserSelect, UserSessionInfo } from "./types";
 import type { APIContext } from "astro";
 import { createDb } from "@/db";
 
@@ -23,7 +23,8 @@ export async function createSession(
   token: string,
   userId: string,
 ): Promise<UserSessionInfo> {
-  const db = createDb(context.locals.runtime.env);
+  const { env } = context.locals;
+  const db = createDb(env);
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const session: UserSessionInfo = {
     id: sessionId,
@@ -38,7 +39,8 @@ export async function validateSessionToken(
   context: APIContext,
   token: string,
 ): Promise<SessionValidationResult> {
-  const db = createDb(context.locals.runtime.env);
+  const { env } = context.locals;
+  const db = createDb(env);
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 
   const [result] = await db
@@ -73,7 +75,8 @@ export async function invalidateSession(
   context: APIContext,
   sessionId: string,
 ): Promise<void> {
-  const db = createDb(context.locals.runtime.env);
+  const { env } = context.locals;
+  const db = createDb(env);
   await db.delete(UserSession).where(eq(UserSession.id, sessionId));
 }
 
@@ -81,7 +84,8 @@ export async function invalidateAllSessions(
   context: APIContext,
   userId: string,
 ): Promise<void> {
-  const db = createDb(context.locals.runtime.env);
+  const { env } = context.locals;
+  const db = createDb(env);
   await db.delete(UserSession).where(eq(UserSession.userId, userId));
 }
 
@@ -90,7 +94,7 @@ export function setSessionTokenCookie(
   token: string,
   expiresAt: Date,
 ): void {
-  const secure = context.locals.runtime.env.NODE_ENV === "production";
+  const secure = import.meta.env.PROD;
   context.cookies.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     path: "/",
@@ -101,7 +105,7 @@ export function setSessionTokenCookie(
 }
 
 export function deleteSessionTokenCookie(context: APIContext): void {
-  const secure = context.locals.runtime.env.NODE_ENV === "production";
+  const secure = import.meta.env.PROD;
   context.cookies.set(SESSION_COOKIE_NAME, "", {
     httpOnly: true,
     path: "/",
