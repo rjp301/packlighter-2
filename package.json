@@ -69,7 +69,6 @@
     "immer": "^10.2.0",
     "jotai": "^2.20.2",
     "lucide-react": "^1.31.0",
-    "postcss-import": "^16.2.0",
     "radix-themes-tw": "^1.1.0",
     "react": "^18.3.1",
     "react-cookie": "^7.2.2",
