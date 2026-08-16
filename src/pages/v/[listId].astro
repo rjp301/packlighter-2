@@ -20,7 +20,7 @@ if (!list.isPublic) {
   return new Response("List is not public", { status: 403 });
 }
 
-const db = createDb(Astro.locals.runtime.env)
+const db = createDb(Astro.locals.env)
 const [listOwner] = await db
   .select({id: User.id, name: User.name})
   .from(User)

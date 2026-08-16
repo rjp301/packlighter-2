@@ -4,7 +4,7 @@ import type { APIContext } from "astro";
 import { createDb } from "@/db";
 import { User } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { getGoogleUser, createGoogle } from "@/lib/server/oauth";
+import { getGoogleUser, createGoogle } from "@/lib/oauth";
 import {
   createSession,
   generateSessionToken,
@@ -12,8 +12,10 @@ import {
 } from "@/lib/lucia";
 
 export async function GET(context: APIContext): Promise<Response> {
-  const db = createDb(context.locals.runtime.env);
-  const google = createGoogle(context);
+  const { env } = context.locals;
+
+  const db = createDb(env);
+  const google = createGoogle(env);
 
   const code = context.url.searchParams.get("code");
   const state = context.url.searchParams.get("state");

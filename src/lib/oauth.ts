@@ -1,9 +1,7 @@
 import { GitHub, Google } from "arctic";
-import type { APIContext } from "astro";
 import { z } from "astro/zod";
 
-export const createGithub = (context: APIContext) => {
-  const { env } = context.locals.runtime;
+export const createGithub = (env: Env) => {
   return new GitHub(
     env.GITHUB_CLIENT_ID,
     env.GITHUB_CLIENT_SECRET,
@@ -11,8 +9,7 @@ export const createGithub = (context: APIContext) => {
   );
 };
 
-export const createGoogle = (context: APIContext) => {
-  const { env } = context.locals.runtime;
+export const createGoogle = (env: Env) => {
   return new Google(
     env.GOOGLE_CLIENT_ID,
     env.GOOGLE_CLIENT_SECRET,
