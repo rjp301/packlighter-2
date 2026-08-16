@@ -132,10 +132,8 @@ const ListDescription: React.FC<{
           Edit
         </Button>
       </div>
-      <div className="shadow rounded-3 bg-gray-2 p-4">
-        <Markdown className="text-sm prose prose-sm max-w-none dark:prose-invert">
-          {list.description || "*No description*"}
-        </Markdown>
+      <div className="rounded-3 bg-gray-2 prose prose-sm dark:prose-invert max-w-none p-4 text-sm shadow">
+        <Markdown>{list.description || "*No description*"}</Markdown>
       </div>
     </section>
   );
