@@ -1,4 +1,4 @@
-import type { ZodString } from "zod";
+import type { ZodString } from "astro/zod";
 
 export type DeleteAlertProps = {
   type: "delete";
@@ -31,7 +31,4 @@ export type InputAlertProps = {
 };
 
 export type AlertProps =
-  | DeleteAlertProps
-  | ErrorAlertProps
-  | InputAlertProps
-  | ConfirmAlertProps;
+  DeleteAlertProps | ErrorAlertProps | InputAlertProps | ConfirmAlertProps;

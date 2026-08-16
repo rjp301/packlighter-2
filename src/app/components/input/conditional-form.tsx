@@ -4,7 +4,7 @@ import { Button, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useEventListener, useOnClickOutside } from "usehooks-ts";
-import { z } from "zod";
+import { z } from "astro/zod";
 import { alertSystemAtom } from "../alert-system/alert-system.store";
 import { useAtom } from "jotai";
 import { AlertCircleIcon, SaveIcon, XIcon } from "lucide-react";

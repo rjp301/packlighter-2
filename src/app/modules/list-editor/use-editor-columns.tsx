@@ -20,7 +20,7 @@ import {
   IconButton,
   Tooltip,
 } from "@radix-ui/themes";
-import { z } from "zod";
+import { z } from "astro/zod";
 import useItemsMutations from "@/app/modules/items/items.mutations";
 import {
   type ExpandedCategory,

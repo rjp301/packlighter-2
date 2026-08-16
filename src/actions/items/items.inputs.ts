@@ -1,5 +1,5 @@
 import { zItemInsert } from "@/lib/types";
-import { z } from "zod";
+import { z } from "astro/zod";
 
 export const getAll = z.any();
 export const create = zItemInsert.omit({ userId: true });

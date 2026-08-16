@@ -4,7 +4,7 @@ import { DndEntityType, isDndEntityType } from "@/lib/client/constants";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
-import { z } from "zod";
+import { z } from "astro/zod";
 import { flushSync } from "react-dom";
 import useMutations from "@/app/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";

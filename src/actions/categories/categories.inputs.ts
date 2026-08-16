@@ -1,5 +1,5 @@
 import { zCategoryInsert } from "@/lib/types";
-import { z } from "zod";
+import { z } from "astro/zod";
 
 export const getFromOtherLists = z.object({ listId: z.string() });
 export const copyToList = z.object({
