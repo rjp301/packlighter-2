@@ -2,6 +2,7 @@
 import RadixProvider from "@/app/components/ui/radix-provider";
 import MarkdownLayout from "@/layouts/markdown-layout.astro";
 import { cn } from "@/lib/client/utils";
+import { render } from "astro:content";
 import { getEntry } from "astro:content";
 // 1. Get the slug from the incoming server request
 const { slug } = Astro.params;
@@ -15,7 +16,7 @@ if (entry === undefined) {
   return Astro.redirect("/404");
 }
 // 4. (Optional) Render the entry to HTML in the template
-const { Content } = await entry.render();
+const { Content } = await render(entry)
 ---
 
 <MarkdownLayout>

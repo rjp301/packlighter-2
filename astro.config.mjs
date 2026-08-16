@@ -1,4 +1,4 @@
-import { defineConfig, envField } from "astro/config";
+import { defineConfig } from "astro/config";
 
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 

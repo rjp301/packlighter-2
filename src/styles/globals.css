@@ -2,6 +2,7 @@
 
 @import "tailwindcss" important;
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-*: initial;

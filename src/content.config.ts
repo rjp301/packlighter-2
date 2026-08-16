@@ -1,8 +1,9 @@
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
+import { glob } from "astro/loaders";
 
 const policies = defineCollection({
-  type: "content",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/policies" }),
   schema: z.object({
     sortOrder: z.number(),
     title: z.string(),
@@ -10,6 +11,4 @@ const policies = defineCollection({
   }),
 });
 
-export const collections = {
-  policies,
-};
+export const collections = { policies };
