@@ -1,4 +1,4 @@
-import { ActionError, type ActionHandler } from "astro:actions";
+import { ActionError } from "astro:actions";
 import {
   getExpandedCategoryItem,
   getListItemIds,
@@ -12,12 +12,13 @@ import type { CategoryItemSelect, ExpandedCategoryItem } from "@/lib/types";
 import * as categoryItemInputs from "./category-items.inputs";
 import { createDb } from "@/db";
 import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
+import type { ActionHandler } from "node_modules/astro/dist/actions/runtime/types";
 
 export const create: ActionHandler<
   typeof categoryItemInputs.create,
   ExpandedCategoryItem
 > = async ({ data }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [{ listId }] = await db
@@ -83,7 +84,7 @@ export const createAndAddToCategory: ActionHandler<
   typeof categoryItemInputs.createAndAddToCategory,
   CategoryItemSelect
 > = async ({ categoryId, itemData, categoryItemData }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [{ listId }] = await db
@@ -121,7 +122,7 @@ export const update: ActionHandler<
   typeof categoryItemInputs.update,
   CategoryItemSelect
 > = async ({ categoryItemId, data }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [{ listId }] = await db
@@ -173,7 +174,7 @@ export const remove: ActionHandler<
   typeof categoryItemInputs.remove,
   null
 > = async ({ categoryItemId }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [{ listId }] = await db

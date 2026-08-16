@@ -1,4 +1,3 @@
-import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
 import {
   Category,
@@ -15,6 +14,7 @@ import type {
   ExpandedCategoryItem,
 } from "@/lib/types";
 import { createDb } from "@/db";
+import type { ActionAPIContext } from "astro:actions";
 
 export const isAuthorized = (context: ActionAPIContext) => {
   const user = context.locals.user;
@@ -31,7 +31,7 @@ export const getExpandedList = async (
   context: ActionAPIContext,
   listId: string,
 ): Promise<ExpandedList> => {
-  const db = createDb(context.locals.runtime.env);
+  const db = createDb(context.locals.env);
   const [list] = await db.select().from(List).where(eq(List.id, listId));
 
   if (!list)
@@ -76,7 +76,7 @@ export const getExpandedCategory = async (
   context: ActionAPIContext,
   categoryId: string,
 ): Promise<ExpandedCategory> => {
-  const db = createDb(context.locals.runtime.env);
+  const db = createDb(context.locals.env);
   const [category] = await db
     .select()
     .from(Category)
@@ -109,7 +109,7 @@ export const getExpandedCategoryItem = async (
   context: ActionAPIContext,
   categoryItemId: string,
 ): Promise<ExpandedCategoryItem> => {
-  const db = createDb(context.locals.runtime.env);
+  const db = createDb(context.locals.env);
   const [categoryItem] = await db
     .select()
     .from(CategoryItem)
@@ -129,7 +129,7 @@ export const getListItemIds = async (
   context: ActionAPIContext,
   listId: string,
 ) => {
-  const db = createDb(context.locals.runtime.env);
+  const db = createDb(context.locals.env);
   const categoryIds = await db
     .select({ id: Category.id })
     .from(Category)
@@ -146,7 +146,7 @@ export const getListItemIds = async (
 };
 
 export const getUser = async (context: ActionAPIContext, userId: string) => {
-  const db = createDb(context.locals.runtime.env);
+  const db = createDb(context.locals.env);
   const user = await db
     .select()
     .from(User)
@@ -167,7 +167,7 @@ export const userHasListAccess = async (
     listId: string;
   },
 ) => {
-  const db = createDb(context.locals.runtime.env);
+  const db = createDb(context.locals.env);
   const [list] = await db
     .select()
     .from(ListUser)

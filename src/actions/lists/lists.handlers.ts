@@ -1,7 +1,7 @@
 import { createDb } from "@/db";
 import { List, Category, CategoryItem, ListUser } from "@/db/schema";
 import { eq, inArray, max } from "drizzle-orm";
-import { type ActionAPIContext, type ActionHandler } from "astro:actions";
+import { type ActionAPIContext } from "astro:actions";
 import {
   getExpandedList,
   isAuthorized,
@@ -11,12 +11,13 @@ import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 import type * as listInputs from "./lists.inputs";
 import type { ExpandedList, ListSelect } from "@/lib/types";
+import type { ActionHandler } from "node_modules/astro/dist/actions/runtime/types";
 
 const getAllUserLists = async (
   c: ActionAPIContext,
   { userId }: { userId: string },
 ): Promise<ListSelect[]> => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const lists = await db
     .select()
     .from(List)
@@ -48,7 +49,7 @@ export const create: ActionHandler<
   typeof listInputs.create,
   ListSelect
 > = async ({ data }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [{ max: maxSortOrder }] = await db
@@ -77,7 +78,7 @@ export const update: ActionHandler<
   typeof listInputs.update,
   ListSelect
 > = async ({ listId, data }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   const { sortOrder } = data;
 
@@ -118,7 +119,7 @@ export const remove: ActionHandler<typeof listInputs.remove, null> = async (
   { listId },
   c,
 ) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   await userHasListAccess(c, { userId, listId });
 
@@ -130,7 +131,7 @@ export const unpack: ActionHandler<
   typeof listInputs.unpack,
   ExpandedList
 > = async ({ listId }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   await userHasListAccess(c, { userId, listId });
   const categoryItems = await db
@@ -150,7 +151,7 @@ export const duplicate: ActionHandler<
   typeof listInputs.duplicate,
   ExpandedList
 > = async ({ listId }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   await userHasListAccess(c, { userId, listId });
 

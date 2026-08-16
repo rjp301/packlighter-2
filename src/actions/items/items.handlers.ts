@@ -2,18 +2,19 @@ import { Category, CategoryItem, Item, List, ListUser } from "@/db/schema";
 import { createDb } from "@/db";
 import { and, eq } from "drizzle-orm";
 
-import { ActionError, type ActionHandler } from "astro:actions";
+import { ActionError } from "astro:actions";
 import { isAuthorized } from "@/actions/helpers";
 
 import * as itemInputs from "./items.inputs";
 import type { IncludedList, ItemSelect } from "@/lib/types";
 import processImage from "@/lib/server/process-image/process-image";
+import type { ActionHandler } from "node_modules/astro/dist/actions/runtime/types";
 
 export const getAll: ActionHandler<
   typeof itemInputs.getAll,
   ItemSelect[]
 > = async (_, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   const items = await db.select().from(Item).where(eq(Item.userId, userId));
   return items;
@@ -23,7 +24,7 @@ export const create: ActionHandler<
   typeof itemInputs.create,
   ItemSelect
 > = async (data, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [newItem] = await db
@@ -37,7 +38,7 @@ export const duplicate: ActionHandler<
   typeof itemInputs.duplicate,
   ItemSelect
 > = async ({ itemId }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   const [item] = await db
     .select()
@@ -63,7 +64,7 @@ export const remove: ActionHandler<typeof itemInputs.remove, null> = async (
   { itemId },
   c,
 ) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [item] = await db
@@ -79,7 +80,7 @@ export const remove: ActionHandler<typeof itemInputs.remove, null> = async (
   }
 
   if (item.imageR2Key) {
-    await c.locals.runtime.env.R2_BUCKET.delete(item.imageR2Key);
+    await c.locals.env.R2_BUCKET.delete(item.imageR2Key);
   }
 
   await db
@@ -93,7 +94,7 @@ export const update: ActionHandler<
   typeof itemInputs.update,
   ItemSelect
 > = async (data, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const { id: itemId } = data;
@@ -122,7 +123,7 @@ export const getListsIncluded: ActionHandler<
   typeof itemInputs.getListsIncluded,
   IncludedList[]
 > = async ({ itemId }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
   const result = await db
     .select({
@@ -130,7 +131,7 @@ export const getListsIncluded: ActionHandler<
       listName: List.name,
       categoryName: Category.name,
     })
-    .from(CategoryItem) 
+    .from(CategoryItem)
     .rightJoin(Category, eq(Category.id, CategoryItem.categoryId))
     .rightJoin(List, eq(List.id, Category.listId))
     .innerJoin(ListUser, eq(ListUser.listId, List.id))
@@ -142,7 +143,7 @@ export const imageUpload: ActionHandler<
   typeof itemInputs.imageUpload,
   null
 > = async ({ itemId, imageFile, removeImageFile }, c) => {
-  const db = createDb(c.locals.runtime.env);
+  const db = createDb(c.locals.env);
   const userId = isAuthorized(c).id;
 
   const [item] = await db
@@ -169,12 +170,12 @@ export const imageUpload: ActionHandler<
 
     // delete old image if it exists
     if (item.imageKey) {
-      await c.locals.runtime.env.R2_BUCKET.delete(item.imageKey);
+      await c.locals.env.R2_BUCKET.delete(item.imageKey);
     }
 
     // upload new image
     const key = crypto.randomUUID();
-    await c.locals.runtime.env.R2_BUCKET.put(key, processed);
+    await c.locals.env.R2_BUCKET.put(key, processed);
     await db
       .update(Item)
       .set({ imageR2Key: key, imageType: "file" })
@@ -182,7 +183,7 @@ export const imageUpload: ActionHandler<
   }
 
   if (removeImageFile && item.imageKey) {
-    await c.locals.runtime.env.R2_BUCKET.delete(item.imageKey);
+    await c.locals.env.R2_BUCKET.delete(item.imageKey);
     await db.update(Item).set({ imageR2Key: null }).where(eq(Item.id, itemId));
   }
 
